@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.final_project.data.Story;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,8 +35,9 @@ public class MainActivity extends AppCompatActivity {
     public static final String ITEM_NAME = "NAME";
     public static final String ITEM_HEIGHT = "HEIGHT";
     public static final String ITEM_MASS = "MASS";
-    List<People> starWarsList = new ArrayList<>();
+    List<Story> stories = new ArrayList<>();
     private ListAdapter adapter;
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
