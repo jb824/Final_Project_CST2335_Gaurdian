@@ -5,12 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,9 +35,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String ITEM_NAME = "NAME";
-    public static final String ITEM_HEIGHT = "HEIGHT";
-    public static final String ITEM_MASS = "MASS";
+//    public static final String ITEM_NAME = "NAME";
+//    public static final String ITEM_HEIGHT = "HEIGHT";
+//    public static final String ITEM_MASS = "MASS";
+    private String searchText;
     List<Story> stories = new ArrayList<>();
     private ListAdapter adapter;
     SQLiteDatabase db;
@@ -42,51 +46,44 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listview);
+        setContentView(R.layout.activity_dashboard);
 
-        StarWars starWars = new StarWars();
-        starWars.execute("https://swapi-node.vercel.app/api/people");
+        EditText editText = findViewById(R.id.search);
+        searchText = editText.getText().toString();
+        String url = "https://content.guardianapis.com/search?api-key=4f732a4a-b27e-4ac7-9350-e9d0b11dd949&q=" + searchText;
+
+        Articles article = new Articles();
+        if (searchText != null || searchText != "") {
+            article.execute(url);
+        }
 
         ListView listView = findViewById(R.id.list);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setAdapter(adapter = new ListAdapter());
 
-        if (starWarsList == null) {
+        if (stories == null) {
             System.out.println("list is null");
         }
 
-        boolean isTablet = findViewById(R.id.fragmentLocation) != null;
-
         listView.setOnItemClickListener((list, item, position, id) -> {
-            People starwarsItem = starWarsList.get(position);
-            Bundle dataToPass = new Bundle();
-            dataToPass.putString(ITEM_NAME, starwarsItem.getName());
-            dataToPass.putDouble(ITEM_HEIGHT, starwarsItem.getHeight());
-            dataToPass.putDouble(ITEM_MASS, starwarsItem.getMass());
+            Story storyItem = stories.get(position);
+            Bundle dataToPass = new Bundle(); // passing to fragment
+//            dataToPass.putString(ITEM_NAME, starwarsItem.getName());
+//            dataToPass.putDouble(ITEM_HEIGHT, starwarsItem.getHeight());
+//            dataToPass.putDouble(ITEM_MASS, starwarsItem.getMass());
 
-            if(isTablet) {
-                DetailsFragment detailsFragment = new DetailsFragment();
-                detailsFragment.setArguments( dataToPass ); //pass it a bundle for information
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragmentLocation, detailsFragment) //Add the fragment in FrameLayout
-                        .addToBackStack("Any String here")
-                        .commit(); //actually load the fragment.
-            } else {//is Phone
-                Intent nextActivity = new Intent(MainActivity.this, EmptyActivity.class);
-                nextActivity.putExtras(dataToPass); //send data to next activity
-                startActivity(nextActivity); //make the transition
-            }
-
+//            String storyUrl = storyItem.getUrl();
+//            Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(storyUrl));
+//            startActivity(urlIntent);
         });
 
-//        for (People p:starWarsList) {
+//        for (Story s:stories) {
 //            System.out.printf("%s, %d, %d, \n", p.getName(),  p.getHeight(), p.getMass());
 //        }
     }
 
-    class StarWars extends AsyncTask<String, Integer, String> {
-        List<People> fieldsList = new ArrayList<>();
+    class Articles extends AsyncTask<String, Integer, String> {
+        List<Story> fieldsList = new ArrayList<>();
         @Override
         protected String doInBackground(String... strings) {
             try {
@@ -107,25 +104,28 @@ public class MainActivity extends AppCompatActivity {
                 String result = stringBuilder.toString();
 
                 JSONObject jsonObject = new JSONObject(result);
-                JSONArray jsonArray = jsonObject.getJSONArray("results");
-                System.out.println("Number of fields: " + jsonArray.length());
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject fields = jsonArray.getJSONObject(i).getJSONObject("fields");
-                    String jsonName = fields.getString("name");
-                    String jsonHeight = fields.getString("height");
-                    String jsonMass = fields.getString("mass");
+                JSONArray jsonArray = jsonObject.getJSONObject("response").getJSONArray("results");
+                System.out.println("Number of articles: " + jsonArray.length());
 
-                    People people = new People(
-                            jsonName,
-                            Double.parseDouble(jsonHeight),
-                            Double.parseDouble(jsonMass)
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject article = jsonArray.getJSONObject(i);
+                    String storyID = article.getString("id");
+                    String date = article.getString("webPublicationDate");
+                    String title = article.getString("webTitle");
+                    String url = article.getString("webUrl");
+
+                    Story story = new Story(
+                            storyID,
+                            date,
+                            title,
+                            url
                     );
 
-                    fieldsList.add(people);
 
+                    fieldsList.add(story);
                 }
 
-//                for (People p:starWarsList) {
+//                for (Story s:stories) {
 //                    System.out.printf("%s, %s, %s, \n", p.getName(), p.getHeight(), p.getMass());
 //                }
 
@@ -141,9 +141,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            for (People p : fieldsList) {
-                starWarsList.add(p);
-                System.out.printf("%s, %s, %s, \n", p.getName(), p.getHeight(), p.getMass());
+            for (Story story : fieldsList) {
+                stories.add(story);
+                System.out.printf("*** article ***");
+                System.out.printf("%s%n, %s%n, %s%n, %s%n \n", story.getStoryID(), story.getDate(), story.getTitle(), story.getUrl());
             }
             adapter.notifyDataSetChanged();
         }
@@ -154,12 +155,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return starWarsList.size();
+            return stories.size();
         }
 
         @Override
-        public People getItem(int position) {
-            return starWarsList.get(position);
+        public Story getItem(int position) {
+            return stories.get(position);
         }
 
         @Override
@@ -177,13 +178,10 @@ public class MainActivity extends AppCompatActivity {
                 view.setClickable(false);
             }
 
-            TextView textView = view.findViewById(R.id.starwars_item);
-            textView.setText(getItem(position).getName());
+            TextView textView = view.findViewById(R.id.story_item);
+            textView.setText(getItem(position).getTitle());
 
             return view;
         }
     }
-}
-
-
 }

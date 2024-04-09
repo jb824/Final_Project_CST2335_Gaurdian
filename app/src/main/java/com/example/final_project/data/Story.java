@@ -8,7 +8,12 @@ public class Story {
     private String title;
     private String url;
     private int favourite;
-    public Story() {}
+    public Story(String storyID, String date, String title, String url) {
+        this.storyID = storyID;
+        this.date = date;
+        this.title = title;
+        this.url = url;
+    }
     public long getId() {
         return id;
     }
@@ -58,11 +63,11 @@ public class Story {
         this.url = url;
     }
 
-    public boolean isFavourite() {
+    public int isFavourite() {
         return favourite;
     }
 
-    public void setFavourite(boolean favourite) {
+    public void setFavourite(int favourite) {
         this.favourite = favourite;
     }
 
