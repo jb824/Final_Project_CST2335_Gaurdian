@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DBConnection extends SQLiteOpenHelper {
+public class DBOpener extends SQLiteOpenHelper {
     protected final static String DATABASE_NAME = "GAURDIAN_DB";
     protected final static int VERSION_NUM = 1;
     public final static String TABLE_NAME = "STORY";
@@ -15,7 +15,7 @@ public class DBConnection extends SQLiteOpenHelper {
     public final static String COL_URL = "URL";
     public final static String COL_FAVOURITE = "FAVOURITE";
     public final static String COL_ID = "_id";
-    public DBConnection(Context context) {
+    public DBOpener(Context context) {
         super(context, DATABASE_NAME, null, VERSION_NUM);
     }
     @Override

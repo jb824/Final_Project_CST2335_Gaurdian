@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Final_Project</string>
+    <string name="search">Search</string>
+    <string name="settings">Settings</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="search_placeholder">search news</string>
+    <string name="title"></string>
+    <string name="message">Click "visit" gaurdian.com to read this story or "save" to add story to favourites and read later</string>
+    <string name="positiveButton">visit</string>
+    <string name="negativeButton">return</string>
+    <string name="neutralButton">save</string>
 </resources>

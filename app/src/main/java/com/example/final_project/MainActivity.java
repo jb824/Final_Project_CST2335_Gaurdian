@@ -1,22 +1,36 @@
 package com.example.final_project;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.final_project.data.DBOpener;
 import com.example.final_project.data.Story;
 
 import org.json.JSONArray;
@@ -39,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 //    public static final String ITEM_HEIGHT = "HEIGHT";
 //    public static final String ITEM_MASS = "MASS";
     private String searchText;
+    private Articles article;
     List<Story> stories = new ArrayList<>();
     private ListAdapter adapter;
     SQLiteDatabase db;
@@ -46,40 +61,89 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
+        setContentView(R.layout.activity_main);
 
-        EditText editText = findViewById(R.id.search);
-        searchText = editText.getText().toString();
-        String url = "https://content.guardianapis.com/search?api-key=4f732a4a-b27e-4ac7-9350-e9d0b11dd949&q=" + searchText;
+        Button button = findViewById(R.id.search_button);
+        EditText editText = findViewById(R.id.search_text);
 
-        Articles article = new Articles();
-        if (searchText != null || searchText != "") {
+        button.setOnClickListener(e -> {
+            // IllegalStateException caused if AsyncTask is not instantiated each search
+            Articles article = new Articles();
+
+            // clear the list view
+            stories.clear();
+
+            // grab keywords from EditText and send JSON request
+            searchText = editText.getText().toString();
+            String url = "https://content.guardianapis.com/search?api-key=4f732a4a-b27e-4ac7-9350-e9d0b11dd949&q=" + searchText;
             article.execute(url);
-        }
+
+            // empty search request for next API request
+            searchText = "";
+        });
 
         ListView listView = findViewById(R.id.list);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setAdapter(adapter = new ListAdapter());
+
 
         if (stories == null) {
             System.out.println("list is null");
         }
 
         listView.setOnItemClickListener((list, item, position, id) -> {
+            System.out.printf("click story at position: " + position + 1);
             Story storyItem = stories.get(position);
+
             Bundle dataToPass = new Bundle(); // passing to fragment
 //            dataToPass.putString(ITEM_NAME, starwarsItem.getName());
 //            dataToPass.putDouble(ITEM_HEIGHT, starwarsItem.getHeight());
 //            dataToPass.putDouble(ITEM_MASS, starwarsItem.getMass());
 
-//            String storyUrl = storyItem.getUrl();
-//            Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(storyUrl));
-//            startActivity(urlIntent);
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle(storyItem.getTitle());
+            builder.setMessage(getString(R.string.message));
+            builder.setPositiveButton(R.string.positiveButton, (DialogInterface.OnClickListener) (dialog, which) -> {
+                // open story in Chrome
+                String storyUrl = storyItem.getUrl();
+                Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(storyUrl));
+                startActivity(urlIntent);
+            });
+            builder.setNegativeButton(R.string.negativeButton, (dialog, which) -> {
+                dialog.cancel();
+            });
+            builder.setNeutralButton(R.string.neutralButton, (dialog, which) -> {
+                storyItem.setFavourite(1);
+
+            });
+            builder.setView(getLayoutInflater().inflate(R.layout.activity_item, null));
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+
         });
 
 //        for (Story s:stories) {
 //            System.out.printf("%s, %d, %d, \n", p.getName(),  p.getHeight(), p.getMass());
 //        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        // Handle your menu item clicks here
+        if (id == R.id.item3) {
+            // Do something
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     class Articles extends AsyncTask<String, Integer, String> {
@@ -123,6 +187,15 @@ public class MainActivity extends AppCompatActivity {
 
 
                     fieldsList.add(story);
+
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(DBOpener.COL_STORY_ID, storyID);
+                    contentValues.put(DBOpener.COL_DATE, date);
+                    contentValues.put(DBOpener.COL_TITLE, title);
+                    contentValues.put(DBOpener.COL_URL, url);
+
+                    // add new row to database
+                    long id = db.insert(DBOpener.TABLE_NAME, null, contentValues);
                 }
 
 //                for (Story s:stories) {
@@ -139,6 +212,10 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
+        protected void onProgressUpdate(Integer... progress) {
+//            setProgressPercent(progress[0]); // add progress bar
+        }
+
         @Override
         protected void onPostExecute(String result) {
             for (Story story : fieldsList) {
@@ -147,7 +224,9 @@ public class MainActivity extends AppCompatActivity {
                 System.out.printf("%s%n, %s%n, %s%n, %s%n \n", story.getStoryID(), story.getDate(), story.getTitle(), story.getUrl());
             }
             adapter.notifyDataSetChanged();
+            cancel(true);
         }
+
     }
 
 
@@ -172,14 +251,41 @@ public class MainActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
             LayoutInflater inflater = getLayoutInflater();
+            Story story = getItem(position);
 
             if (view == null) {
                 view = inflater.inflate(R.layout.activity_item, parent, false);
                 view.setClickable(false);
+
             }
 
             TextView textView = view.findViewById(R.id.story_item);
-            textView.setText(getItem(position).getTitle());
+            textView.setText(story.getTitle());
+
+            ImageButton imageButton = view.findViewById(R.id.favourite_button);
+            imageButton.setOnClickListener(e -> {
+                if (story.isFavourite() == 0) {
+                    Drawable drawable = getResources().getDrawable(R.drawable.heart_filled);
+                    imageButton.setImageDrawable(drawable);
+
+                    story.setFavourite(1);
+                } else {
+                    Drawable drawable = getResources().getDrawable(R.drawable.heart_unfilled);
+                    imageButton.setImageDrawable(drawable);
+
+                    story.setFavourite(0);
+                }
+
+                // update database
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(DBOpener.COL_FAVOURITE, story.isFavourite());
+
+                long id = db.update(
+                        DBOpener.TABLE_NAME,
+                        contentValues,
+                        DBOpener.COL_ID + "=?",
+                        new String[]{ String.valueOf(story.getId())});
+            });
 
             return view;
         }
