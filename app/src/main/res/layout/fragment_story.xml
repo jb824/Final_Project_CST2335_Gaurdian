@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StoryFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/title_key"
+        android:textSize="20dp"
+        android:text="@string/fragment_title"
+        android:textStyle="bold"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/title_value"
+        android:textSize="20dp"
+        android:layout_toRightOf="@id/title_key"
+        android:text="fill_me" />
+
+
+    <TextView
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/url_key"
+        android:layout_below="@id/title_key"
+        android:text="@string/fragment_url"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/url_value"
+        android:textSize="20dp"
+        android:text="fill_me"
+        android:layout_toRightOf="@id/url_key"
+        android:layout_below="@id/title_key"
+        />
+    <TextView
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/category_key"
+        android:layout_below="@id/url_key"
+        android:text="@string/fragment_category"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/category_value"
+        android:textSize="20dp"
+        android:text="fill_me"
+        android:layout_toRightOf="@id/category_key"
+        android:layout_below="@id/url_value"
+        />
+
+</FrameLayout>

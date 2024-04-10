@@ -3,7 +3,7 @@ package com.example.final_project.data;
 public class Story {
     private long id;
     private String storyID;
-    private String summary;
+    private String category;
     private String date;
     private String title;
     private String url;
@@ -30,12 +30,12 @@ public class Story {
         this.storyID = storyID;
     }
 
-    public String getContent() {
-        return summary;
+    public String getCategory() {
+        return category;
     }
 
-    public void setContent(String content) {
-        this.summary = content;
+    public void setCategory(String content) {
+        this.category = content;
     }
 
 

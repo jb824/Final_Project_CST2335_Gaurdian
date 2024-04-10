@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.final_project.data.DBOpener;
@@ -55,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
     private String searchText;
     private Articles article;
     List<Story> stories = new ArrayList<>();
+    public static final String ITEM_ID = "ID";
+    public static final String ITEM_TITLE = "TITLE";
+    public static final String ITEM_URL = "URL";
+    public static final String ITEM_CATEGORY = "CATEGORY";
+    private ProgressBar progressBar;
     private ListAdapter adapter;
     SQLiteDatabase db;
 
@@ -65,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button button = findViewById(R.id.search_button);
         EditText editText = findViewById(R.id.search_text);
+        progressBar = findViewById(R.id.progressBar);
 
         button.setOnClickListener(e -> {
             // IllegalStateException caused if AsyncTask is not instantiated each search
@@ -92,33 +99,37 @@ public class MainActivity extends AppCompatActivity {
         }
 
         listView.setOnItemClickListener((list, item, position, id) -> {
-            System.out.printf("click story at position: " + position + 1);
             Story storyItem = stories.get(position);
 
             Bundle dataToPass = new Bundle(); // passing to fragment
-//            dataToPass.putString(ITEM_NAME, starwarsItem.getName());
-//            dataToPass.putDouble(ITEM_HEIGHT, starwarsItem.getHeight());
-//            dataToPass.putDouble(ITEM_MASS, starwarsItem.getMass());
+            dataToPass.putLong(ITEM_ID, storyItem.getId());
+            dataToPass.putString(ITEM_TITLE, storyItem.getTitle());
+            dataToPass.putString(ITEM_URL, storyItem.getUrl());
+            dataToPass.putString(ITEM_CATEGORY, storyItem.getCategory());
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle(storyItem.getTitle());
-            builder.setMessage(getString(R.string.message));
-            builder.setPositiveButton(R.string.positiveButton, (DialogInterface.OnClickListener) (dialog, which) -> {
-                // open story in Chrome
-                String storyUrl = storyItem.getUrl();
-                Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(storyUrl));
-                startActivity(urlIntent);
-            });
-            builder.setNegativeButton(R.string.negativeButton, (dialog, which) -> {
-                dialog.cancel();
-            });
-            builder.setNeutralButton(R.string.neutralButton, (dialog, which) -> {
-                storyItem.setFavourite(1);
+            Intent nextActivity = new Intent(MainActivity.this, EmptyActivity.class);
+            nextActivity.putExtras(dataToPass); //send data to next activity
+            startActivity(nextActivity); //make the transition
 
-            });
-            builder.setView(getLayoutInflater().inflate(R.layout.activity_item, null));
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+//            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//            builder.setTitle(storyItem.getTitle());
+//            builder.setMessage(getString(R.string.message));
+//            builder.setPositiveButton(R.string.positiveButton, (DialogInterface.OnClickListener) (dialog, which) -> {
+//                // open story in Chrome
+//                String storyUrl = storyItem.getUrl();
+//                Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(storyUrl));
+//                startActivity(urlIntent);
+//            });
+//            builder.setNegativeButton(R.string.negativeButton, (dialog, which) -> {
+//                dialog.cancel();
+//            });
+//            builder.setNeutralButton(R.string.neutralButton, (dialog, which) -> {
+//                storyItem.setFavourite(1);
+//
+//            });
+//            builder.setView(getLayoutInflater().inflate(R.layout.activity_item, null));
+//            AlertDialog alertDialog = builder.create();
+//            alertDialog.show();
 
         });
 
@@ -148,6 +159,12 @@ public class MainActivity extends AppCompatActivity {
 
     class Articles extends AsyncTask<String, Integer, String> {
         List<Story> fieldsList = new ArrayList<>();
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
         @Override
         protected String doInBackground(String... strings) {
             try {
@@ -187,15 +204,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                     fieldsList.add(story);
-
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put(DBOpener.COL_STORY_ID, storyID);
-                    contentValues.put(DBOpener.COL_DATE, date);
-                    contentValues.put(DBOpener.COL_TITLE, title);
-                    contentValues.put(DBOpener.COL_URL, url);
-
-                    // add new row to database
-                    long id = db.insert(DBOpener.TABLE_NAME, null, contentValues);
                 }
 
 //                for (Story s:stories) {
@@ -212,19 +220,28 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
-        protected void onProgressUpdate(Integer... progress) {
-//            setProgressPercent(progress[0]); // add progress bar
-        }
 
         @Override
         protected void onPostExecute(String result) {
             for (Story story : fieldsList) {
+                // persist in memory
                 stories.add(story);
                 System.out.printf("*** article ***");
                 System.out.printf("%s%n, %s%n, %s%n, %s%n \n", story.getStoryID(), story.getDate(), story.getTitle(), story.getUrl());
+
+                // add to db
+//                ContentValues contentValues = new ContentValues();
+//                contentValues.put(DBOpener.COL_STORY_ID, story.getStoryID());
+//                contentValues.put(DBOpener.COL_DATE, story.getDate());
+//                contentValues.put(DBOpener.COL_TITLE, story.getTitle());
+//                contentValues.put(DBOpener.COL_URL, story.getUrl());
+//
+//                // add new row to database
+//                long id = db.insert(DBOpener.TABLE_NAME, null, contentValues);
             }
             adapter.notifyDataSetChanged();
             cancel(true);
+            progressBar.setVisibility(View.GONE);
         }
 
     }
