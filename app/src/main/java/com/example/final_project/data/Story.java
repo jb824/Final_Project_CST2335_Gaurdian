@@ -8,11 +8,12 @@ public class Story {
     private String title;
     private String url;
     private int favourite;
-    public Story(String storyID, String date, String title, String url) {
+    public Story(String storyID, String date, String title, String url, String category) {
         this.storyID = storyID;
         this.date = date;
         this.title = title;
         this.url = url;
+        this.category = category;
     }
     public long getId() {
         return id;

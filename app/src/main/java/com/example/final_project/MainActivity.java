@@ -163,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
+            DBOpener dbOpener = new DBOpener(MainActivity.this);
+            db = dbOpener.getWritableDatabase();
         }
 
         @Override
@@ -194,16 +196,28 @@ public class MainActivity extends AppCompatActivity {
                     String date = article.getString("webPublicationDate");
                     String title = article.getString("webTitle");
                     String url = article.getString("webUrl");
+                    String category = article.getString("sectionName");
 
                     Story story = new Story(
                             storyID,
                             date,
                             title,
-                            url
+                            url,
+                            category
                     );
 
 
                     fieldsList.add(story);
+
+                    // add to db
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(DBOpener.COL_STORY_ID, story.getStoryID());
+                    contentValues.put(DBOpener.COL_DATE, story.getDate());
+                    contentValues.put(DBOpener.COL_TITLE, story.getTitle());
+                    contentValues.put(DBOpener.COL_URL, story.getUrl());
+
+                    // add new row to database
+                    long id = db.insert(DBOpener.TABLE_NAME, null, contentValues);
                 }
 
 //                for (Story s:stories) {
@@ -229,15 +243,6 @@ public class MainActivity extends AppCompatActivity {
                 System.out.printf("*** article ***");
                 System.out.printf("%s%n, %s%n, %s%n, %s%n \n", story.getStoryID(), story.getDate(), story.getTitle(), story.getUrl());
 
-                // add to db
-//                ContentValues contentValues = new ContentValues();
-//                contentValues.put(DBOpener.COL_STORY_ID, story.getStoryID());
-//                contentValues.put(DBOpener.COL_DATE, story.getDate());
-//                contentValues.put(DBOpener.COL_TITLE, story.getTitle());
-//                contentValues.put(DBOpener.COL_URL, story.getUrl());
-//
-//                // add new row to database
-//                long id = db.insert(DBOpener.TABLE_NAME, null, contentValues);
             }
             adapter.notifyDataSetChanged();
             cancel(true);
