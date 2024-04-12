@@ -21,10 +21,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.final_project.data.DBOpener;
 import com.example.final_project.data.Story;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +44,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends BaseActivity {
     private String searchText;
     private Articles article;
     List<Story> stories = new ArrayList<>();
@@ -56,6 +60,18 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+                drawer, toolbar, R.string.open, R.string.close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         Button button = findViewById(R.id.search_button);
         EditText editText = findViewById(R.id.search_text);
@@ -113,23 +129,28 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
+    protected int getLayoutResourceId() {
+        return R.layout.activity_search;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        // Handle your menu item clicks here
-        if (id == R.id.item3) {
-            // Do something
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        int id = item.getItemId();
+//
+//        // Handle your menu item clicks here
+//        if (id == R.id.item3) {
+//            // Do something
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     class Articles extends AsyncTask<String, Integer, String> {
         List<Story> fieldsList = new ArrayList<>();

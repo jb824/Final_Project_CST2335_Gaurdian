@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,6 +16,48 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:openDrawer="start">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="start"
+            >
+
+            <ListView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/search_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:textSize="26dp"
+                    android:drawablePadding="8dp"
+                    android:maxLines="1"
+                    android:background="@drawable/edit_text"
+                    android:hint="@string/search_placeholder"
+                    android:layout_weight="1"
+                    android:layout_margin="8dp"/>
+
+                <Button
+                    android:id="@+id/search_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:background="@drawable/search_button"
+                    android:text="search"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
         <com.google.android.material.navigation.NavigationView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -25,41 +67,7 @@
             app:menu="@menu/navigation"
             android:id="@+id/nav_view">
         </com.google.android.material.navigation.NavigationView>
-
     </androidx.drawerlayout.widget.DrawerLayout>
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/list"
-        />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:textSize="26dp"
-        android:id="@+id/search_text"
-        android:drawablePadding="8dp"
-
-        android:maxLines="1"
-        android:background="@drawable/edit_text"
-        android:layout_alignBottom="@id/list"
-        android:hint="@string/search_placeholder"
-        >
-    </EditText>
-    <Button
-        android:id="@+id/search_button"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="search"
-        android:layout_alignBottom="@id/list"
-        android:layout_alignRight="@id/search_text"
-        android:background="@drawable/search_button"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="12dp"
-        > </Button>
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="match_parent"
@@ -70,4 +78,4 @@
         android:visibility="gone"
         style="@style/Widget.AppCompat.ProgressBar" />
 
-</RelativeLayout>
+</LinearLayout>
