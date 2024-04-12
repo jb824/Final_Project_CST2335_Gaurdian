@@ -31,10 +31,10 @@ public class StoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         data = getArguments();
-        id = data.getLong(MainActivity.ITEM_ID);
-        title = data.getString(MainActivity.ITEM_TITLE);
-        url = data.getString(MainActivity.ITEM_URL);
-        category = data.getString(MainActivity.ITEM_CATEGORY);
+        id = data.getLong(SearchActivity.ITEM_ID);
+        title = data.getString(SearchActivity.ITEM_TITLE);
+        url = data.getString(SearchActivity.ITEM_URL);
+        category = data.getString(SearchActivity.ITEM_CATEGORY);
 
         View view = inflater.inflate(R.layout.fragment_story, container, false);
 
@@ -47,6 +47,26 @@ public class StoryFragment extends Fragment {
         // story category
         TextView categoryView = (TextView) view.findViewById(R.id.category_value);
         categoryView.setText(category);
+
+        //            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//            builder.setTitle(storyItem.getTitle());
+//            builder.setMessage(getString(R.string.message));
+//            builder.setPositiveButton(R.string.positiveButton, (DialogInterface.OnClickListener) (dialog, which) -> {
+//                // open story in Chrome
+//                String storyUrl = storyItem.getUrl();
+//                Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(storyUrl));
+//                startActivity(urlIntent);
+//            });
+//            builder.setNegativeButton(R.string.negativeButton, (dialog, which) -> {
+//                dialog.cancel();
+//            });
+//            builder.setNeutralButton(R.string.neutralButton, (dialog, which) -> {
+//                storyItem.setFavourite(1);
+//
+//            });
+//            builder.setView(getLayoutInflater().inflate(R.layout.activity_item, null));
+//            AlertDialog alertDialog = builder.create();
+//            alertDialog.show();
 
 
         // Inflate the layout for this fragment

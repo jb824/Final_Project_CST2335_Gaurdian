@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/home"
+        android:title="@string/home"
+        android:icon="@drawable/home"
+        android:orderInCategory="1"
+        app:showAsAction="always"/>
     <item android:id="@+id/search_text"
         android:title="@string/search"
         android:icon="@drawable/search"
-        android:orderInCategory="1"
-        app:showAsAction="always"/>
-    <item android:id="@+id/joke"
-        android:title="@string/search"
-        android:icon="@drawable/search"
-        android:orderInCategory="1"
-        app:showAsAction="always"/>
+        android:orderInCategory="2"
+        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/favourite"
+        android:title="@string/favourite"
+        android:icon="@drawable/heart_filled"
+        android:orderInCategory="3"
+        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/exit"
+        android:title="@string/exit"
+        android:icon="@drawable/exit"
+        android:orderInCategory="3"
+        app:showAsAction="ifRoom"/>
 </menu>

@@ -37,5 +37,8 @@
         android:background="@drawable/image_button_bg"
         android:layout_margin="8dp"
         android:layout_gravity="end|center_vertical"
+        android:descendantFocusability="blocksDescendants"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
         />
 </LinearLayout>

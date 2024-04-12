@@ -9,6 +9,7 @@ public class Story {
     private String url;
     private int favourite;
     public Story(String storyID, String date, String title, String url, String category) {
+        id++;
         this.storyID = storyID;
         this.date = date;
         this.title = title;
