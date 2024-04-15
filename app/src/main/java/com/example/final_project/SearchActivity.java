@@ -2,7 +2,9 @@ package com.example.final_project;
 
 import static android.app.ProgressDialog.show;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
@@ -63,6 +65,8 @@ public class SearchActivity extends BaseActivity {
     private ListAdapter adapter;
     SQLiteDatabase db;
 
+    SharedPreferences pref;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,9 +96,14 @@ public class SearchActivity extends BaseActivity {
             // clear the list view
             stories.clear();
 
+            // grab api key
+
+            pref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            String GUARDIAN_NEWS_API = pref.getString("api", null);
+
             // grab keywords from EditText and send JSON request
             searchText = editText.getText().toString();
-            String url = "https://content.guardianapis.com/search?api-key=4f732a4a-b27e-4ac7-9350-e9d0b11dd949&q=" + searchText;
+            String url = GUARDIAN_NEWS_API + searchText;
             article.execute(url);
 
             // empty search request for next API request

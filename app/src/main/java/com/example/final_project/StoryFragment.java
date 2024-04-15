@@ -63,7 +63,7 @@ public class StoryFragment extends Fragment {
 
         urlView.setOnClickListener(e -> {
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
             builder.setTitle("Visit TheGuardian.com");
             builder.setMessage(getString(R.string.message));
             builder.setPositiveButton(R.string.positiveButton, (DialogInterface.OnClickListener) (dialog, which) -> {
@@ -104,4 +104,5 @@ public class StoryFragment extends Fragment {
             throw new IllegalArgumentException("Parent activity must be AppCompatActivity");
         }
     }
+
 }
