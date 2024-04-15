@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Final_Project</string>
+    <string name="toolbar"></string>
     <!-- navigation and menu items -->
     <string name="search">Search</string>
     <string name="favourite">Favourites</string>
@@ -10,14 +11,14 @@
     <string name="close">Close</string>
     <string name="search_placeholder">search news</string>
     <string name="title"></string>
-    <string name="message">Click "visit" gaurdian.com to read this story or "save" to add story to favourites and read later</string>
+    <string name="message">Click \"visit\" to read this story or \"save\" to add story to favourites and read later</string>
     <string name="positiveButton">visit</string>
     <string name="negativeButton">return</string>
     <string name="neutralButton">save</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="fragment_title"></string>
-    <string name="fragment_url"></string>
-    <string name="fragment_category"></string>
+    <string name="fragment_title">story title</string>
+    <string name="fragment_url">url</string>
+    <string name="fragment_category">category</string>
 
 </resources>

@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StoryFragment">
+    tools:context=".StoryFragment"
+    android:padding="10dp">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -12,55 +13,65 @@
         android:orientation="vertical"
         >
     <TextView
-        android:layout_width="75dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/title_key"
         android:textSize="20dp"
+        android:fontFamily="@font/alegreya_bold_italic"
         android:text="@string/fragment_title"
         android:textStyle="bold"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/title_value"
-        android:textSize="20dp"
-        android:layout_toRightOf="@id/title_key"
-        android:text="fill_me" />
+
+        <TextView
+            android:id="@+id/title_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/title_key"
+            android:fontFamily="@font/alegreya"
+            android:text="fill_me"
+            android:textSize="20dp" />
 
 
-    <TextView
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/url_key"
-        android:layout_below="@id/title_key"
-        android:text="@string/fragment_url"
-        android:textSize="20dp"
-        android:textStyle="bold"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/url_value"
-        android:textSize="20dp"
-        android:text="fill_me"
-        android:layout_toRightOf="@id/url_key"
-        android:layout_below="@id/title_key"
-        />
-    <TextView
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/category_key"
-        android:layout_below="@id/url_key"
-        android:text="@string/fragment_category"
-        android:textSize="20dp"
-        android:textStyle="bold"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/category_value"
-        android:textSize="20dp"
-        android:text="fill_me"
-        android:layout_toRightOf="@id/category_key"
-        android:layout_below="@id/url_value"
-        />
+        <TextView
+            android:id="@+id/url_key"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_key"
+            android:fontFamily="@font/alegreya_bold_italic"
+            android:text="@string/fragment_url"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/url_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_key"
+            android:layout_toRightOf="@id/url_key"
+            android:clickable="true"
+            android:fontFamily="@font/alegreya"
+            android:textColor="@color/blue"
+            android:text="fill_me"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/category_key"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/url_key"
+            android:fontFamily="@font/alegreya_bold_italic"
+            android:text="@string/fragment_category"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/category_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/url_value"
+            android:layout_toRightOf="@id/category_key"
+            android:fontFamily="@font/alegreya"
+            android:text="fill_me"
+            android:textSize="20dp" />
     </LinearLayout>
 
 </FrameLayout>

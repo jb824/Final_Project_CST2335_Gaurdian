@@ -35,6 +35,13 @@
         <activity android:name=".SearchActivity"
             android:exported="true"
             android:theme="@style/Theme.Final_Project" />
+        <activity android:name=".FavouritesActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Final_Project" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

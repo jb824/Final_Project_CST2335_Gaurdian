@@ -1,9 +1,14 @@
 package com.example.final_project;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -11,6 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.final_project.data.DBOpener;
+import com.example.final_project.data.Story;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,16 +30,21 @@ public class StoryFragment extends Fragment {
 
     private Bundle data;
     private long id;
+    private String storyId;
+    private String date;
     private String title;
     private String url;
     private String category;
     private AppCompatActivity parentActivity;
+    SQLiteDatabase db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         data = getArguments();
         id = data.getLong(SearchActivity.ITEM_ID);
+        storyId = data.getString(SearchActivity.ITEM_STORY_ID);
+        date = data.getString(SearchActivity.ITEM_DATE);
         title = data.getString(SearchActivity.ITEM_TITLE);
         url = data.getString(SearchActivity.ITEM_URL);
         category = data.getString(SearchActivity.ITEM_CATEGORY);
@@ -48,27 +61,36 @@ public class StoryFragment extends Fragment {
         TextView categoryView = (TextView) view.findViewById(R.id.category_value);
         categoryView.setText(category);
 
-        //            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//            builder.setTitle(storyItem.getTitle());
-//            builder.setMessage(getString(R.string.message));
-//            builder.setPositiveButton(R.string.positiveButton, (DialogInterface.OnClickListener) (dialog, which) -> {
-//                // open story in Chrome
-//                String storyUrl = storyItem.getUrl();
-//                Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(storyUrl));
-//                startActivity(urlIntent);
-//            });
-//            builder.setNegativeButton(R.string.negativeButton, (dialog, which) -> {
-//                dialog.cancel();
-//            });
-//            builder.setNeutralButton(R.string.neutralButton, (dialog, which) -> {
-//                storyItem.setFavourite(1);
-//
-//            });
-//            builder.setView(getLayoutInflater().inflate(R.layout.activity_item, null));
-//            AlertDialog alertDialog = builder.create();
-//            alertDialog.show();
+        urlView.setOnClickListener(e -> {
 
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+            builder.setTitle("Visit TheGuardian.com");
+            builder.setMessage(getString(R.string.message));
+            builder.setPositiveButton(R.string.positiveButton, (DialogInterface.OnClickListener) (dialog, which) -> {
+                // open story in Chrome
+                Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(urlIntent);
+            });
+            builder.setNegativeButton(R.string.negativeButton, (dialog, which) -> {
+                dialog.cancel();
+            });
+            builder.setNeutralButton(R.string.neutralButton, (dialog, which) -> {
+                Story story = new Story(storyId, date, title, url, category);
+                story.setFavourite(1);
 
+                try {
+                    DBOpener dbOpener = new DBOpener(this.parentActivity);
+                    dbOpener.updateStory(story);
+                } catch (NullPointerException npe) {
+                    npe.printStackTrace();
+                }
+
+            });
+            builder.setView(getLayoutInflater().inflate(R.layout.activity_permission, null));
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+
+        });
         // Inflate the layout for this fragment
         return view;
     }
@@ -76,5 +98,10 @@ public class StoryFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        if (context instanceof AppCompatActivity) {
+            parentActivity = (AppCompatActivity) context;
+        } else {
+            throw new IllegalArgumentException("Parent activity must be AppCompatActivity");
+        }
     }
 }

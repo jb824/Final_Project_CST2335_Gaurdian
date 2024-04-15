@@ -27,6 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         setContentView(getLayoutResourceId());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.home);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

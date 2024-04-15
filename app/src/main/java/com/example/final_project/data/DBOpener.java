@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DBOpener extends SQLiteOpenHelper {
 
         protected final static String DATABASE_NAME = "GAURDIAN.db";
@@ -91,6 +94,7 @@ public class DBOpener extends SQLiteOpenHelper {
         String[] idValue = new String[] { story.getTitle() };
 
         long id = db.update(TABLE_NAME, values, COL_TITLE + "=?", idValue);
+        db.close();
         return id;
     }
 
@@ -106,7 +110,8 @@ public class DBOpener extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void printCursor(Cursor c) {
+    public List<Story> getFavourites(Cursor c) {
+        List<Story> stories = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
         String database = String.valueOf(db.getVersion());
         String columnsTotal = String.valueOf(c.getColumnCount());
@@ -131,15 +136,23 @@ public class DBOpener extends SQLiteOpenHelper {
             String dateText = c.getString(dateIndex);
             String titleText = c.getString(titleIndex);
             String urlText = c.getString(urlIndex);
+
+            Story story = new Story(storyIdText, dateText, titleText, urlText, categoryText);
             boolean isFavourite;
             if (c.getInt(favouriteIndex) != 0) {
                 isFavourite = true;
+                story.setFavourite(1);
+                stories.add(story);
             } else {
                 isFavourite = false;
             }
 
+
+
             System.out.printf("%-4s %-120s %-15s %-20s %-120s %-150s %-5s\n", id, storyIdText, categoryText, dateText, titleText, urlText, isFavourite);
         }
+
+        return stories;
 //        db.close();
     }
 

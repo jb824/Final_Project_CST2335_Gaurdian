@@ -1,11 +1,14 @@
 package com.example.final_project;
 
+import static android.app.ProgressDialog.show;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +33,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.final_project.data.DBOpener;
 import com.example.final_project.data.Story;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,6 +54,8 @@ public class SearchActivity extends BaseActivity {
     private Articles article;
     List<Story> stories = new ArrayList<>();
     public static final String ITEM_ID = "ID";
+    public static final String ITEM_STORY_ID = "STORY_ID";
+    public static final String ITEM_DATE = "DATE";
     public static final String ITEM_TITLE = "TITLE";
     public static final String ITEM_URL = "URL";
     public static final String ITEM_CATEGORY = "CATEGORY";
@@ -62,6 +69,7 @@ public class SearchActivity extends BaseActivity {
         setContentView(R.layout.activity_search);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.search);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -76,10 +84,6 @@ public class SearchActivity extends BaseActivity {
         Button button = findViewById(R.id.search_button);
         EditText editText = findViewById(R.id.search_text);
         progressBar = findViewById(R.id.progressBar);
-
-//        DBOpener dbOpener = new DBOpener(MainActivity.this);
-//        db = dbOpener.getWritableDatabase();
-//        dbOpener.onCreate(db);
 
         button.setOnClickListener(e -> {
             // IllegalStateException caused if AsyncTask is not instantiated each search
@@ -110,6 +114,8 @@ public class SearchActivity extends BaseActivity {
 
             Bundle dataToPass = new Bundle(); // passing to fragment
             dataToPass.putLong(ITEM_ID, storyItem.getId());
+            dataToPass.putString(ITEM_STORY_ID, storyItem.getStoryID());
+            dataToPass.putString(ITEM_DATE, storyItem.getDate());
             dataToPass.putString(ITEM_TITLE, storyItem.getTitle());
             dataToPass.putString(ITEM_URL, storyItem.getUrl());
             dataToPass.putString(ITEM_CATEGORY, storyItem.getCategory());
@@ -133,25 +139,6 @@ public class SearchActivity extends BaseActivity {
         return R.layout.activity_search;
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        int id = item.getItemId();
-//
-//        // Handle your menu item clicks here
-//        if (id == R.id.item3) {
-//            // Do something
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
     class Articles extends AsyncTask<String, Integer, String> {
         List<Story> fieldsList = new ArrayList<>();
 
@@ -159,6 +146,8 @@ public class SearchActivity extends BaseActivity {
         protected void onPreExecute() {
             DBOpener dbOpener = new DBOpener(SearchActivity.this);
             db = dbOpener.getWritableDatabase();
+
+            Toast.makeText(SearchActivity.this, "Searching....", Toast.LENGTH_SHORT).show();
             progressBar.setVisibility(View.VISIBLE);
         }
 
@@ -232,11 +221,13 @@ public class SearchActivity extends BaseActivity {
             adapter.notifyDataSetChanged();
             cancel(true);
             progressBar.setVisibility(View.GONE);
+            if (stories.isEmpty()) {
+                Snackbar.make(findViewById(R.id.list), "No stories found. Try a different search.", Snackbar.LENGTH_LONG).show();
+            }
 //            db.close();
         }
 
     }
-
 
     class ListAdapter extends BaseAdapter {
 
@@ -298,7 +289,7 @@ public class SearchActivity extends BaseActivity {
 
                 String[] columns = {DBOpener.COL_ID, DBOpener.COL_STORY_ID, DBOpener.COL_CATEGORY, DBOpener.COL_DATE, DBOpener.COL_TITLE, DBOpener.COL_URL, DBOpener.COL_FAVOURITE};
                 Cursor results = db.query(false, DBOpener.TABLE_NAME, columns, null, null, null, null, null, null);
-                dbOpener.printCursor(results);
+                dbOpener.getFavourites(results);
             });
             return view;
         }
