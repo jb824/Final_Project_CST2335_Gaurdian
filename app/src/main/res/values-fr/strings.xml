@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Final_Project</string>
+    <string name="toolbar"></string>
+    <!-- navigation and menu items -->
+    <string name="search">Rechercher</string>
+    <string name="favourite">Favoris</string>
+    <string name="home">Accueil</string>
+    <string name="exit">Quitter</string>
+    <string name="settings">Paramètres</string>
+    <string name="settings_message">Boîte de dialogue d\'alerte pour gérer les paramètres</string>
+    <string name="open">Ouvrir</string>
+    <string name="close">Fermer</string>
+    <string name="search_placeholder">rechercher des actualités</string>
+    <string name="title"></string>
+    <string name="message">Cliquez sur \"visiter\" pour lire cette histoire ou \"enregistrer\" pour ajouter l'histoire aux favoris et lire plus tard</string>
+    <string name="positiveButton">visiter</string>
+    <string name="negativeButton">retour</string>
+    <string name="neutralButton">enregistrer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Bonjour fragment vide</string>
+    <string name="fragment_title">titre de l\'histoire</string>
+    <string name="fragment_url">URL</string>
+    <string name="fragment_category">catégorie</string>
+</resources>
