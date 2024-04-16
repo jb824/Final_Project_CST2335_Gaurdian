@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.example.final_project.data","l":"DBOpener"},{"p":"com.example.final_project.data","l":"Story"}];updateSearchResults();
