@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Final_Project</string>
     <string name="toolbar"></string>
     <!-- navigation and menu items -->
@@ -23,3 +23,4 @@
     <string name="fragment_category">category</string>
 
 </resources>
+

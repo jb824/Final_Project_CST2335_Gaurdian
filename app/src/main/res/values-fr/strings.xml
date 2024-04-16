@@ -1,6 +1,5 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Final_Project</string>
-    <string name="toolbar"></string>
     <!-- navigation and menu items -->
     <string name="search">Rechercher</string>
     <string name="favourite">Favoris</string>
@@ -11,8 +10,8 @@
     <string name="open">Ouvrir</string>
     <string name="close">Fermer</string>
     <string name="search_placeholder">rechercher des actualités</string>
-    <string name="title"></string>
-    <string name="message">Cliquez sur \"visiter\" pour lire cette histoire ou \"enregistrer\" pour ajouter l'histoire aux favoris et lire plus tard</string>
+    <string name="title">titre</string>
+    <string name="message">Cliquez sur \"visiter\" pour lire cette histoire ou \"enregistrer\" pour ajouter l\'histoire aux favoris et lire plus tard</string>
     <string name="positiveButton">visiter</string>
     <string name="negativeButton">retour</string>
     <string name="neutralButton">enregistrer</string>
